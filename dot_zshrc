@@ -1,0 +1,64 @@
+# Zsh interactive-shell config: prompt, history, PATH, plugins, and aliases.
+
+# Prompt
+# Starship: stripped-down config on the Linux console (no font/color support),
+# full config in graphical terminal emulators.
+if [[ "$TERM" == "linux" ]]; then
+  export STARSHIP_CONFIG="$HOME/.config/starship/starship-tty.toml"
+else
+  export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
+fi
+eval "$(starship init zsh)"
+
+# History
+# Keep 10k commands in memory and on disk, appended (not overwritten) and
+# shared live between all open terminals; skip consecutive duplicates and
+# commands that start with a space.
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=10000
+SAVEHIST=10000
+setopt APPEND_HISTORY
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+
+# Environment
+# Prefer user-local binaries (pip/cargo/npm) over system ones.
+export PATH="$HOME/.local/bin:$PATH"
+
+# Default editor. EDITOR/VISUAL cover most tools; SUDO_EDITOR is what
+# `sudoedit` uses.
+export EDITOR=nvim
+export VISUAL=nvim
+export SUDO_EDITOR=nvim
+
+# Plugins
+# Autosuggestions from history, zoxide (smarter cd), and live syntax
+# highlighting — which must be sourced last.
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+eval "$(zoxide init zsh)"
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# Monitoring
+# journalctl: live log, boot errors, temperature readings.
+alias syslog='journalctl -f'
+alias syserr='journalctl -p err -b'
+alias systemp='journalctl -t sensors -n 20'
+
+# sar: CPU, memory, and network stats.
+alias syscpu='sar -u'
+alias sysmem='sar -r'
+alias sysnet='sar -n DEV'
+
+# Audit summary and per-process network usage.
+alias sysaudit='sudo aureport --summary'
+alias sysnetapp='sudo nethogs'
+
+# Dotfiles
+# chezmoi keeps a second copy of every managed file under
+# ~/.local/share/chezmoi; these move changes between the two, and `cmg` runs
+# git on that repo itself. "Committed" and "applied" are separate states.
+alias cma='chezmoi re-add'                     # $HOME -> repo: capture live edits
+alias cmd='chezmoi diff'                       # what `chezmoi apply` would push
+alias cme='chezmoi edit --apply'               # edit the repo copy, apply at once
+alias cmg='git -C "$(chezmoi source-path)"'    # git in the source repo, anywhere
