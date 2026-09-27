@@ -1,0 +1,227 @@
+# i3 window manager configuration.
+#
+# Ordered by definition-before-use: i3 substitutes $variables at parse time, so
+# every `set` precedes the lines that read it. Launched from .xinitrc; what the
+# status bar shows belongs to ~/.config/i3status-rust/, not here.
+
+# Full reference: https://i3wm.org/docs/userguide.html
+
+# =============================================================================
+# Basics
+# =============================================================================
+
+# Super is the one modifier no application claims for itself. Naming the
+# terminal once means the rest of the file never repeats it.
+set $mod Mod4
+set $terminal ghostty
+
+# Adwaita Sans for text: it has the tallest lowercase of the sans fonts
+# available, and looks the same size as MonoLisa in the terminal. The Nerd Font
+# after it only supplies icons, in window titles and the bar. "Medium" applies
+# to the whole list, so it must come last or it is read as part of a font name.
+# The bar's icon sizes and block gap in ~/.config/i3status-rust/ follow this
+# 10pt, so change them together.
+font pango:Adwaita Sans, MonoLisa Nerd Font Mono Medium 10
+
+# =============================================================================
+# Autostart
+# =============================================================================
+
+# i3 does not supervise these, so one that dies stays dead until the next
+# restart. The environment import must run first: services started through
+# D-Bus, dunst among them, otherwise start without a display and fail silently.
+exec --no-startup-id systemctl --user import-environment DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP; dbus-update-activation-environment --systemd DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP
+
+# The compositor, without which rofi's translucent background has nothing to
+# blend with.
+exec --no-startup-id picom --config ~/.config/picom/picom.conf
+
+# Restores whichever wallpaper was last set with `feh --bg-fill <image>`.
+exec --no-startup-id ~/.fehbg
+
+# =============================================================================
+# Windows
+# =============================================================================
+
+# $mod+drag moves a floating window from anywhere inside it; dragging a title
+# bar is what rearranges tiled windows.
+floating_modifier $mod
+tiling_drag modifier titlebar
+
+# Every window keeps a border, so its color alone says which one is focused.
+default_border normal 1
+default_floating_border normal 1
+
+# Ghostty draws no decorations of its own, so a thin border is enough.
+for_window [class="^com.mitchellh.ghostty$"] border pixel 1
+
+# Cyan marks the focused window, as it marks the focused workspace and rofi's
+# selection. Titles dim through greys rather than glaring in full white, and
+# only an urgent window stays bright. Backgrounds stay opaque, because i3's
+# transparency would show the wallpaper behind the window, not the bar.
+#                       border  background text    indicator child_border
+client.focused          #48dfe0 #1e1e2e    #a6adc8 #48dfe0   #48dfe0
+client.focused_inactive #45475a #1e1e2e    #7f849c #45475a   #45475a
+client.unfocused        #45475a #1e1e2e    #6c7086 #45475a   #45475a
+client.urgent           #cc1f26 #1e1e2e    #faf2e6 #cc1f26   #cc1f26
+# The root window, visible for a moment before feh paints the wallpaper.
+client.background       #1e1e2e
+
+# =============================================================================
+# Keybindings
+# =============================================================================
+
+bindsym $mod+Return exec $terminal
+# Asks the window to close rather than killing it, so an editor still gets to
+# prompt about unsaved work.
+bindsym $mod+Shift+q kill
+
+# Lists installed applications only, never bare binaries. Its look lives in
+# ~/.config/rofi/.
+bindsym $mod+d exec --no-startup-id rofi -show drun
+# Alternatives (disabled): rofi with run mode too, or dmenu-based launcher:
+# bindcode $mod+40 exec "rofi -modi drun,run -show drun"
+# bindcode $mod+40 exec --no-startup-id i3-dmenu-desktop
+
+# hjkl because the editor is nvim, with the arrows as a fallback. Adding Shift
+# moves the window with the same key that focuses it.
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# Horizontal split sits on b because $mod+h already moves focus left. A split
+# decides where the next window opens; toggling flips windows already there.
+bindsym $mod+b split h
+bindsym $mod+v split v
+bindsym $mod+f fullscreen toggle
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+bindsym $mod+Shift+space floating toggle
+# Switch focus between the tiling and floating layers.
+bindsym $mod+space focus mode_toggle
+bindsym $mod+a focus parent
+# Alternative (disabled: conflicts with the launcher binding):
+#bindsym $mod+d focus child
+
+# Volume moves in 5% steps, the same as scrolling on the bar's volume block, so
+# change the two together. The bar's mic block shows what the mic key toggles.
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
+# The script saves into ~/Pictures/Screenshots and copies the image to the
+# clipboard; it is on PATH, so the same command works from a shell.
+bindsym Print exec --no-startup-id ~/.local/bin/screenshot full
+bindsym $mod+Print exec --no-startup-id ~/.local/bin/screenshot region
+
+# =============================================================================
+# Workspaces
+# =============================================================================
+
+# Workspaces are matched by their leading number, so one that gets a name later
+# still answers to its key, and renaming it touches only its line here.
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+# $mod+number switches to a workspace; adding Shift sends the window there.
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
+
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
+
+# =============================================================================
+# Session
+# =============================================================================
+
+# Reload rereads this file; restart also restarts i3 itself, keeping the layout.
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r restart
+# The only binding that asks first: e sits next to r, so ending the X session
+# is one slipped finger away from a harmless restart.
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+
+# Resizes in single steps instead of i3's ten: holding a key repeats it, so fine
+# steps cost no speed. Return, Escape or $mod+r leaves the mode.
+mode "resize" {
+        bindsym h resize shrink width 1 px or 1 ppt
+        bindsym j resize grow height 1 px or 1 ppt
+        bindsym k resize shrink height 1 px or 1 ppt
+        bindsym l resize grow width 1 px or 1 ppt
+
+        bindsym Left resize shrink width 1 px or 1 ppt
+        bindsym Down resize grow height 1 px or 1 ppt
+        bindsym Up resize shrink height 1 px or 1 ppt
+        bindsym Right resize grow width 1 px or 1 ppt
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
+}
+bindsym $mod+r mode "resize"
+
+# =============================================================================
+# Status bar
+# =============================================================================
+
+# i3status-rs finds its own config in ~/.config/i3status-rust/, and the bar
+# inherits the font set above.
+bar {
+        status_command i3status-rs
+        position top
+
+        colors {
+                # The bar's background shows behind every status block,
+                # since the i3status-rust theme sets none of its own.
+                background         #1e1e2e
+
+                # Flat, with no borders. Red and orange appear only when
+                # something needs attention: an urgent window or resize mode.
+                #                  border  background text
+                focused_workspace  #1e1e2e #1e1e2e    #48dfe0
+                active_workspace   #1e1e2e #1e1e2e    #faf2e6
+                inactive_workspace #1e1e2e #1e1e2e    #faf2e6
+                urgent_workspace   #1e1e2e #cc1f26    #faf2e6
+                binding_mode       #1e1e2e #d9693d    #faf2e6
+        }
+}
