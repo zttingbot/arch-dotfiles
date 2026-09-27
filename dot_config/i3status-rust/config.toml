@@ -1,0 +1,192 @@
+# i3status-rust configuration: the status blocks in the i3 bar.
+#
+# Blocks are drawn left to right in the order they appear below. Default state
+# colors live in themes/neon.toml. Full reference:
+# https://docs.rs/i3status-rs/latest/i3status_rs/
+#
+# Conventions
+#   - Text is always #faf2e6, written by hand into every format, so a block's
+#     state color reaches only its icon.
+#   - Icon colors: CPU magenta #ff2bd6, clock azure #009bff, battery ramps
+#     cyan -> yellow -> orange -> red, muted volume grey #6c7086, a down network
+#     red #ff0044. Everything else uses the theme.
+#
+# Kept in sync with ~/.config/i3/config
+#   - The bar's 10pt font sets the icon size in icons_format, the battery
+#     icon's 69% scale and rise, and the separator in themes/neon.toml.
+#   - The 5% volume keys set the volume block's step_width.
+
+# =============================================================================
+# Appearance
+# =============================================================================
+
+# Markup wrapped around every $icon. A top-level key, so it must come before
+# the first [table].
+#
+# The font is named explicitly so Adwaita Sans, first in the bar's font list,
+# can never draw an icon at the wrong size. The size is absolute (12288 Pango
+# units = 12pt, at 1024 per point) rather than 'large', because only an
+# absolute size can be scaled from outside, as the battery block does. The
+# spaces around each icon live in the block formats instead, where that
+# scaling cannot shrink them.
+icons_format = "<span font_family='MonoLisa Nerd Font Mono' size='12288'>{icon}</span>"
+
+[theme]
+theme = "neon"
+
+# Must be the Nerd Font variant: plain "material" uses codepoints the Nerd Fonts
+# do not carry, and draws empty boxes instead.
+[icons]
+icons = "material-nf"
+
+# --- Icon overrides ----------------------------------------------------------
+
+# Each key replaces the material-nf glyph of the same name, which a block draws
+# through $icon. Every glyph is picked to draw at the same size as the others,
+# so the bar reads evenly; the stock set mixes sizes. The battery family is the
+# one exception, and its block scales it back into line.
+#
+# Codepoints are written as escapes because these private-use glyphs are
+# invisible in most editors. The trailing comments give each glyph's Nerd Fonts
+# name (md- is Material Design, cod- is Codicons), searchable at
+# https://www.nerdfonts.com/cheat-sheet.
+[icons.overrides]
+
+# CPU: one chip at every load level; the stock ramp changes size as load moves.
+cpu = "\U000F0EDF" # md-cpu_32_bit
+
+# Network: wireless signal strength, from outline (no signal) to four bars.
+net_wireless = [
+  "\U000F08FE", # 0 bars  md-network_strength_outline
+  "\U000F08F4", # 1 bar   md-network_strength_1
+  "\U000F08F6", # 2 bars  md-network_strength_2
+  "\U000F08F8", # 3 bars  md-network_strength_3
+  "\U000F08FA", # 4 bars  md-network_strength_4
+]
+
+# Network: wired and loopback, drawn as a matching pair.
+net_wired = "\U000F0317"    # md-lan
+net_loopback = "\U000F0318" # md-lan_connect
+
+# Volume: one speaker at every level; only muting swaps the glyph.
+volume = "\U0000EB75"       # cod-unmute
+volume_muted = "\U0000EB24" # cod-mute
+
+# Battery: charge level in ten steps, from the plain family, so a bolt appears
+# only in bat_charging.
+bat = [
+  "\U000F007A", # 10%   md-battery_10
+  "\U000F007B", # 20%   md-battery_20
+  "\U000F007C", # 30%   md-battery_30
+  "\U000F007D", # 40%   md-battery_40
+  "\U000F007E", # 50%   md-battery_50
+  "\U000F007F", # 60%   md-battery_60
+  "\U000F0080", # 70%   md-battery_70
+  "\U000F0081", # 80%   md-battery_80
+  "\U000F0082", # 90%   md-battery_90
+  "\U000F0079", # 100%  md-battery
+]
+
+# Battery: charging and unknown, drawn at the same size as the ramp above.
+bat_charging = "\U000F0084"      # md-battery_charging
+bat_not_available = "\U000F0091" # md-battery_unknown
+
+# Clock: a clock face.
+time = "\U0000EC75" # cod-clockface
+
+# =============================================================================
+# Blocks
+# =============================================================================
+
+# --- CPU ---------------------------------------------------------------------
+
+# Total utilization, labelled, since a bare "8%" is ambiguous next to the
+# volume and battery readings.
+#
+# Magenta when idle. Info is set to match idle, so the icon only changes color
+# at the 75% warning and 90% critical thresholds, rather than for most of the
+# day.
+[[block]]
+block = "cpu"
+interval = 5
+warning_cpu = 75
+critical_cpu = 90
+format = " $icon <span color='#faf2e6'>CPU $utilization.eng(w:2)</span> "
+[block.theme_overrides]
+idle_fg = "#ff2bd6"
+info_fg = "#ff2bd6"
+
+# --- Network -----------------------------------------------------------------
+
+# The active link's device name; the icon shows its type and signal strength.
+#
+# Theme colors while up. A down link swaps in inactive_format instead of
+# setting a state, so its red has to be written into the format itself.
+[[block]]
+block = "net"
+format = " $icon <span color='#faf2e6'>$device</span> "
+inactive_format = " <span color='#ff0044'>$icon</span> <span color='#faf2e6'>down</span> "
+
+# --- Volume ------------------------------------------------------------------
+
+# Output volume, or "muted". Scrolling on the block steps it by step_width.
+#
+# Theme colors normally. Muted is reported as a warning, recolored here to dim
+# the icon to grey.
+#
+# Each {a|b} branch renders as a separate piece of the bar, so the text-color
+# span is repeated inside both rather than wrapped around them.
+[[block]]
+block = "sound"
+driver = "pulseaudio"
+step_width = 5
+format = " $icon {<span color='#faf2e6'>$volume.eng(w:2)</span>|<span color='#faf2e6'>muted</span>} "
+[block.theme_overrides]
+warning_fg = "#6c7086"
+
+# --- Battery -----------------------------------------------------------------
+
+# Charge percentage. Hidden entirely on machines without a battery.
+#
+# Colors by state:
+#   idle     cyan        full
+#   good     yellow      charging (the only state with a bolt)
+#   info     orange      on battery
+#   warning  red-orange  at 30% and below
+#   critical red         at 15% and below (theme color)
+#
+# By default "good" covers both charging and discharging above the good
+# threshold, so unplugging changed nothing. Setting info and good to 100
+# leaves good for charging alone.
+#
+# The battery icons draw larger than the rest, so every format shrinks them to
+# 69% and raises them 1408 Pango units (1.375pt) back into line. Each state has
+# its own format, and the defaults differ, so all four are set explicitly.
+[[block]]
+block = "battery"
+interval = 30
+info = 100
+good = 100
+format = " <span size='69%' rise='1408'>$icon</span> <span color='#faf2e6'>$percentage</span> "
+full_format = " <span size='69%' rise='1408'>$icon</span> <span color='#faf2e6'>$percentage</span> "
+not_charging_format = " <span size='69%' rise='1408'>$icon</span> <span color='#faf2e6'>$percentage</span> "
+empty_format = " <span size='69%' rise='1408'>$icon</span> <span color='#faf2e6'>$percentage</span> "
+missing_format = ""
+[block.theme_overrides]
+idle_fg = "#00fff2"
+good_fg = "#ffee00"
+info_fg = "#ff7a00"
+warning_fg = "#ff3b00"
+
+# --- Clock -------------------------------------------------------------------
+
+# Date and time, e.g. "27 Sep 14:05".
+#
+# Azure rather than the theme's cyan, so it stands apart from network and
+# volume.
+[[block]]
+block = "time"
+interval = 5
+format = " $icon <span color='#faf2e6'>$timestamp.datetime(f:'%d %b %R')</span> "
+[block.theme_overrides]
+idle_fg = "#009bff"

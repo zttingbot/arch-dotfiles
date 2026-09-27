@@ -1,0 +1,44 @@
+# i3status-rust theme.
+#
+# Loaded by ../config.toml ([theme] theme = "neon") when the bar starts. The
+# keys are independent, so their order only groups related settings. Full
+# reference: https://docs.rs/i3status-rs/latest/i3status_rs/
+#
+# Only foreground colors are set here. The bar's background belongs to
+# ~/.config/i3/config and shows through every block, so a block can never turn
+# into a colored box.
+#
+# Colors
+#   - Cyan #48dfe0: idle, good and info, the calm states.
+#   - Yellow #ffcc00: warning.
+#   - Red #ff0044: critical.
+#   Per-block overrides of these live in ../config.toml, whose header lists
+#   them.
+#
+# Kept in sync with ~/.config/i3/config
+#   - The bar's 10pt font sets the width of the separator.
+
+# =============================================================================
+# Colors
+# =============================================================================
+
+# State colors, which reach icons only: block text is always #faf2e6, written
+# into each format in ../config.toml. Every state is set, so i3bar's fallback
+# text color is never used.
+#
+# Good and info match idle, so a block looks idle in those states unless it
+# sets its own colors, as the CPU and battery blocks do.
+idle_fg = "#48dfe0"     # cyan
+good_fg = "#48dfe0"     # cyan, as idle
+info_fg = "#48dfe0"     # cyan, as idle
+warning_fg = "#ffcc00"  # yellow
+critical_fg = "#ff0044" # red
+
+# =============================================================================
+# Spacing
+# =============================================================================
+
+# The gap between blocks, and the only setting that controls it. Four spaces
+# sits between too tight and too wide. It scales with the bar's font (see
+# "Kept in sync" above).
+separator = "    "
