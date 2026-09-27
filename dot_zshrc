@@ -1,15 +1,23 @@
 # Zsh interactive shell configuration.
 #
-# Ordered by dependency: environment and shell options are established before
-# any tool is initialized, since several tools read them at init time. Nothing
-# here is machine-specific — that belongs in ~/.zshrc.local, sourced last.
+# Loaded by zsh at the start of every interactive shell, after ~/.zshenv and,
+# for login shells, ~/.zprofile. Tracked by chezmoi; anything machine-specific
+# belongs in ~/.zshrc.local, which is untracked and sourced last. Full
+# reference: https://zsh.sourceforge.io/Doc/Release/
+#
+# Load order matters, so sections run top to bottom by dependency:
+#   1. Environment, paths and history options, which the tools read at init.
+#   2. compinit, which defines the `compdef` that zoxide and fzf call.
+#   3. The tools themselves, with syntax highlighting last among them.
+#   4. Local overrides.
 
 # =============================================================================
 # Environment
 # =============================================================================
 
-# Keep terminal and GUI editor behavior consistent. SUDO_EDITOR is separate
-# because `sudoedit` reads only that variable, with no fallback to EDITOR.
+# Programs read VISUAL or EDITOR depending on their age, so both point at nvim.
+# SUDO_EDITOR is set as well because `sudoedit` reads only that variable, with
+# no fallback to EDITOR.
 export EDITOR="nvim"
 export VISUAL="$EDITOR"
 export SUDO_EDITOR="$EDITOR"
@@ -18,55 +26,64 @@ export SUDO_EDITOR="$EDITOR"
 # Paths
 # =============================================================================
 
-# Keep PATH free of duplicates, so re-sourcing this file (or nesting shells)
-# does not stack up repeated entries. zsh keeps `path` and `PATH` in sync.
+# Drops duplicate entries, so re-sourcing this file or nesting shells does not
+# stack them up. zsh keeps the `path` array and `PATH` in sync.
 typeset -U path PATH
 
-# User-installed binaries (pip, cargo, npm) take precedence over system ones.
+# Personal scripts and user-level installs (pip --user, pipx) take precedence
+# over system binaries.
 export PATH="$HOME/.local/bin:$PATH"
 
 # =============================================================================
 # History
 # =============================================================================
 
+# Sizes count commands: HISTSIZE in memory, SAVEHIST in the file.
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=10000
 SAVEHIST=10000
 
 # Persist across sessions and share live between open terminals, so a command
-# run in one pane is immediately recallable in another. Timestamps make it
-# possible to reconstruct when something was run.
+# run in one pane can be recalled at once in another. Timestamps record when
+# each command was run.
 setopt APPEND_HISTORY
 setopt SHARE_HISTORY
 setopt EXTENDED_HISTORY
 
-# Keep the file useful rather than exhaustive: drop consecutive repeats, omit
-# commands typed with a leading space, evict duplicates before unique entries
-# when trimming to SAVEHIST, and normalize stray whitespace.
+# Keep the file useful rather than exhaustive:
+#   HIST_IGNORE_DUPS        drop consecutive repeats
+#   HIST_IGNORE_SPACE       omit commands typed with a leading space
+#   HIST_EXPIRE_DUPS_FIRST  evict duplicates first when trimming to SAVEHIST
+#   HIST_REDUCE_BLANKS      normalize stray whitespace
 setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_SPACE
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_REDUCE_BLANKS
 
-# Load a `!` expansion into the buffer for review instead of running it blind.
+# Loads a `!` expansion into the buffer for review instead of running it blind.
 setopt HIST_VERIFY
 
 # =============================================================================
 # Completion
 # =============================================================================
 
-# Must precede the tool initialization below: zoxide and fzf register their
-# completions with `compdef`, which is what compinit defines.
+# Before the tools below: zoxide and fzf register their completions with
+# `compdef`, which compinit defines.
 autoload -Uz compinit
 compinit
 
 # =============================================================================
-# Tool initialization
+# Tools
 # =============================================================================
 
-# Starship reads STARSHIP_CONFIG when it initializes, so it has to be set
-# first. The Linux console has no Nerd Font or truecolor support, so it gets a
-# stripped-down config rather than a broken-looking prompt.
+# Each tool loads only if it is installed, so this file also works on a bare
+# machine.
+
+# --- Prompt ------------------------------------------------------------------
+
+# Starship reads STARSHIP_CONFIG when it initializes, so it is set first. The
+# Linux console has no Nerd Font or truecolor support, so it gets a stripped-
+# down config rather than a broken-looking prompt.
 if [[ "$TERM" == "linux" ]]; then
   export STARSHIP_CONFIG="$HOME/.config/starship/starship-tty.toml"
 else
@@ -77,15 +94,21 @@ if command -v starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"
 fi
 
+# --- Autosuggestions ---------------------------------------------------------
+
 # Suggests completions from history; Right Arrow accepts one in full.
 if [[ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
   source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
 
+# --- zoxide ------------------------------------------------------------------
+
 # Frecency-ranked directory jumping: `z <name>`, or `zi` to pick interactively.
 if command -v zoxide >/dev/null 2>&1; then
   eval "$(zoxide init zsh)"
 fi
+
+# --- fzf ---------------------------------------------------------------------
 
 # Ctrl+R history, Ctrl+T files, Alt+C cd, and `**<Tab>` fuzzy completion.
 # `fzf --zsh` emits both the key bindings and the completion module, which
@@ -94,7 +117,10 @@ if command -v fzf >/dev/null 2>&1; then
   source <(fzf --zsh)
 fi
 
-# Must come last: it wraps every widget defined up to this point.
+# --- Syntax highlighting -----------------------------------------------------
+
+# Last of the tools: it hooks every widget defined before it, so a widget added
+# after it, including one in ~/.zshrc.local, goes unhighlighted.
 if [[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
   source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
@@ -103,7 +129,7 @@ fi
 # Local overrides
 # =============================================================================
 
-# Machine-specific settings live here, deliberately untracked by chezmoi.
+# Machine-specific settings, deliberately untracked by chezmoi.
 if [[ -f "$HOME/.zshrc.local" ]]; then
   source "$HOME/.zshrc.local"
 fi
