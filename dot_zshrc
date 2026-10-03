@@ -94,6 +94,15 @@ if command -v starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"
 fi
 
+# --- fnm ---------------------------------------------------------------------
+
+# Node version manager: puts the default version (`fnm default`) on PATH, and
+# on every `cd` switches to the version pinned in a .node-version or .nvmrc,
+# searching parent directories too so monorepo subfolders pick it up.
+if command -v fnm >/dev/null 2>&1; then
+  eval "$(fnm env --use-on-cd --version-file-strategy=recursive --shell zsh)"
+fi
+
 # --- Autosuggestions ---------------------------------------------------------
 
 # Suggests completions from history; Right Arrow accepts one in full.
