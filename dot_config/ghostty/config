@@ -1,0 +1,192 @@
+# Ghostty configuration.
+#
+# Read by Ghostty at startup, and again on reload_config (ctrl+shift+, by
+# default) in a running instance. Each key is independent and a repeated key
+# keeps its last value, so order only groups things: sections follow what is
+# on screen, from the glyphs out to the window, then behavior. Ghostty has no
+# trailing comments (text after a value becomes part of it), so every comment
+# sits on its own line above what it describes.
+# Full reference: https://ghostty.org/docs/config/reference
+#
+# Colors
+#   - Base #1e1e2e: the background, and palette 0 so black cells blend in.
+#   - Text #faf2e6: the foreground and palette 7.
+#   - Red #cc1f26, green #a6e3a1, yellow #e0b948, blue #89b4fa,
+#     magenta #e04874, cyan #48dfe0: palette 1-6, the normal ANSI colors.
+#   - Grey #6c7086: palette 8, bright black, for dimmed text.
+#   - Orange #d9693d: palette 9, bright red, so bold red stands apart.
+#   - Palette 10-15: the hues of 2-7 lifted in lightness, so programs that
+#     draw bold as bright show a visible change.
+#
+# Kept in sync with ~/.config/i3/config
+#   - background and palette 1 (urgent red), 6 (focus cyan), 7 (text),
+#     8 (grey) and 9 (resize orange) use i3's hexes.
+#   - MonoLisa here pairs with Adwaita Sans there: their x-heights are 55.0%
+#     and 54.6% of em, so terminal and chrome read at the same optical size.
+#     A proportional font outside the terminal is intentional, not drift.
+#   - window-decoration = false relies on i3 drawing a 1px border on Ghostty.
+#
+# Kept in sync with ~/.config/dunst/dunstrc and ~/.config/rofi/colors.rasi
+#   - The base, text, cyan, red and grey hexes are shared with them.
+#
+# Kept in sync with ~/.config/tmux/tmux.conf
+#   - scrollback-limit (100MB, roughly 100k lines) matches history-limit.
+#   - tmux's terminal-features names xterm-ghostty, the TERM Ghostty sets.
+#   - tmux's set-clipboard relies on Ghostty accepting OSC 52 writes, which
+#     the default clipboard-write = allow permits.
+
+# =============================================================================
+# Font
+# =============================================================================
+
+# --- Faces -------------------------------------------------------------------
+
+# MonoLisa Nerd Font Mono, installed under ~/.local/share/fonts, is the code
+# face and is used only here; see "Kept in sync" above for the UI font it
+# pairs with.
+font-family = MonoLisa Nerd Font Mono
+
+# Each style is bound to an explicit cut instead of being left to fontconfig.
+# Regular reads thin on a dark background (see alpha-blending below), so the
+# body is Medium (500), and emphasis is ExtraBold (800) rather than Bold (700)
+# to keep a clear weight step above it.
+font-style = Medium Regular
+font-style-italic = Medium Italic
+font-style-bold = ExtraBold Regular
+font-style-bold-italic = ExtraBold Italic
+
+# Every style above is a real cut, so this only affects fallback fonts, which
+# should not be smeared into bold or sheared into italic. Drop it if a fallback
+# with no bold cut ever needs a bold.
+font-synthetic-style = false
+
+# Points, scaled for the screen's DPI.
+font-size = 12
+
+# MonoLisa's default leading is tight; 10% more is easier on the eyes over
+# long sessions and opens up nvim splits and diffs.
+adjust-cell-height = 10%
+
+# --- Features ----------------------------------------------------------------
+
+# No font-feature lines, on purpose:
+#   - ss01, ss02, ss07, ss08 and zero were chosen when this MonoLisa was
+#     generated, so the build bakes them in and strips their tags. Lookups in
+#     the default-on liga feature apply them: zero -> zero.zero (#163),
+#     asterisk -> asterisk.ss01 (#164), brace{left,right} -> .ss07 (#169),
+#     paren{left,right} -> .ss08 (#170). ss02 left no variant glyphs; its
+#     outlines replace the originals. Setting any of them is a no-op.
+#   - The sets this build still exposes as toggles (ss03-ss06, ss09-ss18)
+#     stay off.
+#   - Ligatures (calt and liga) are on by default, and font-shaping-break
+#     defaults to cursor, which splits a ligature back into characters while
+#     the cursor is inside it.
+#
+# Must not be `font-feature = -liga` to drop ligatures: liga also carries the
+# baked-in sets above, so it would revert the slashed zero, the asterisk, the
+# braces and the parens too. Use `-calt` alone; lookups #163-#170 live in liga
+# and survive it.
+
+# --- Rendering ---------------------------------------------------------------
+
+# Both values are the Ghostty 1.3.1 defaults, pinned because the font weights
+# above are tuned against them and a changed default would quietly undo that.
+
+# Gamma-correct blending renders light-on-dark text thinner than native does,
+# which is why the body weight is Medium rather than Regular. Switching to
+# native rebalances every font-style above.
+alpha-blending = linear-corrected
+
+# The Nerd Fonts patcher strips TrueType hinting (maxSizeOfInstructions = 0,
+# no fpgm, prep or cvt, and a gasp table asking for grayscale AA only), so
+# FreeType's autohinter is the only thing gridfitting these glyphs; no-autohint
+# would leave them unhinted and mushy at 12pt. light hints vertically only,
+# keeping MonoLisa's horizontal proportions and advance widths.
+freetype-load-flags = hinting,no-force-autohint,no-monochrome,autohint,light
+
+# =============================================================================
+# Window
+# =============================================================================
+
+# --- Chrome ------------------------------------------------------------------
+
+# No titlebar or border of Ghostty's own; see "Kept in sync" above.
+window-decoration = false
+
+# The tab bar stays hidden even with several tabs, keeping the window
+# borderless.
+window-show-tab-bar = never
+
+# Theme the chrome from the colors below, not the desktop's light or dark
+# setting.
+window-theme = ghostty
+
+# --- Padding -----------------------------------------------------------------
+
+# Points between the text and the window edge.
+window-padding-x = 5
+window-padding-y = 5
+
+# Integer cell division leaves spare pixels; spread them evenly instead of
+# piling them on the right and bottom edges.
+window-padding-balance = true
+
+# =============================================================================
+# Colors
+# =============================================================================
+
+# --- Base --------------------------------------------------------------------
+
+# Named in the header's Colors list.
+background = #1e1e2e
+foreground = #faf2e6
+
+# picom runs without blur, so whatever is behind the window stays sharp. 0.95
+# (1.0 is opaque) keeps some depth while cutting the noise around glyph stems.
+background-opacity = 0.95
+
+# WCAG contrast ratio, from 1 (none) to 21 (black on white). 1.1 only lifts
+# text that is near-invisible against its own background, such as black on
+# black. It leaves the dim entries untouched: against #1e1e2e red is 2.96:1,
+# bright black 3.36:1 and magenta 4.18:1.
+minimum-contrast = 1.1
+
+# --- Palette -----------------------------------------------------------------
+
+# Entries 0-7 are the normal ANSI colors and 8-15 their bright variants, which
+# many programs use for bold. Hexes are named in the header's Colors list.
+#   0 black    1 red      2 green    3 yellow
+#   4 blue     5 magenta  6 cyan     7 white
+#   8-15 the same order, bright
+palette = 0=#1e1e2e
+palette = 1=#cc1f26
+palette = 2=#a6e3a1
+palette = 3=#e0b948
+palette = 4=#89b4fa
+palette = 5=#e04874
+palette = 6=#48dfe0
+palette = 7=#faf2e6
+palette = 8=#6c7086
+palette = 9=#d9693d
+palette = 10=#b6e8b2
+palette = 11=#e2c46c
+palette = 12=#a1c2f9
+palette = 13=#e26c8e
+palette = 14=#6ce2e2
+palette = 15=#fcf8f1
+
+# =============================================================================
+# Behavior
+# =============================================================================
+
+# Keeps the pointer off the text being typed.
+mouse-hide-while-typing = true
+
+# Selecting text copies it to the primary selection, ready for a middle-click
+# paste with no copy key.
+copy-on-select = true
+
+# Bytes, not lines: 100MB is roughly 100k lines of typical output, against a
+# 10MB default. Inside tmux, tmux's own history applies instead; see "Kept in
+# sync" above.
+scrollback-limit = 100000000
