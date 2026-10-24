@@ -1,0 +1,112 @@
+// Rofi theme.
+//
+// Loaded by ../config.rasi through @theme each time rofi opens. A minimal,
+// Spotlight-like popup, adapted from newmanls/rofi-themes-collection
+// (spotlight-dark.rasi) and stripped down further. The palette comes first,
+// ahead of the rules that read its variables, and the rules then follow the
+// popup from the outside in.
+// Full reference: https://davatorium.github.io/rofi/current/rofi-theme.5/
+//
+// Colors
+//   Hexes may carry a two-digit alpha suffix, from 00 (clear) to FF (opaque).
+//   - bg0 #1e1e2e (base, opaque): the window background.
+//   - bg2 #48dfe0 at 33 (~20%): the selected row's tint.
+//   - fg0 #faf2e6 (text): every row's text.
+//   - fg1 #48dfe0 (cyan): the selected row's text.
+//   - fg2 #faf2e6 at 66 (~40%): the placeholder.
+//   - border-col #48dfe0 (cyan, opaque): the window border.
+//
+// Kept in sync with ~/.config/ghostty/config
+//   - The base, text and cyan hexes are Ghostty's.
+//
+// Kept in sync with ~/.config/i3/config
+//   - Adwaita Sans is i3's font for window titles and the bar, here at 14pt
+//     rather than 10.
+//   - Cyan marks the selection here as it marks focus in i3.
+
+// ============================================================================
+// Palette
+// ============================================================================
+
+// Named in the header's Colors list.
+* {
+    bg0:        #1e1e2eFF;
+    bg2:        #48dfe033;
+    fg0:        #faf2e6;
+    fg1:        #48dfe0;
+    fg2:        #faf2e666;
+    border-col: #48dfe0FF;
+}
+
+// ============================================================================
+// Widgets
+// ============================================================================
+
+// --- Defaults ---------------------------------------------------------------
+
+// Inherited by every widget below unless it sets its own. A proportional
+// sans, not a monospace, on purpose: it carries the Spotlight-like look. Only
+// the window paints a background; every widget inside it is transparent.
+* {
+    font:   "Adwaita Sans 14";
+
+    background-color:   transparent;
+    text-color:         @fg0;
+
+    margin:     0;
+    padding:    0;
+    spacing:    0;
+}
+
+// --- Window -----------------------------------------------------------------
+
+// The popup, centered on the monitor. 560px wide, with a 1px square border in
+// the accent, like i3's focused window.
+window {
+    background-color:   @bg0;
+    location:       center;
+    width:          560;
+    border-radius:  0;
+    border:         1px;
+    border-color:   @border-col;
+}
+
+// --- Search field -----------------------------------------------------------
+
+// Only the text entry: no prompt, and no mode switcher.
+inputbar {
+    padding:    14px 16px;
+    children:   [ entry ];
+}
+
+// The placeholder shows while nothing is typed.
+entry {
+    placeholder         : "Search";
+    placeholder-color   : @fg2;
+}
+
+// --- Results ----------------------------------------------------------------
+
+// Up to 8 rows in one column; the list shrinks when fewer match.
+listview {
+    lines:      8;
+    columns:    1;
+    fixed-height:   false;
+}
+
+element {
+    padding:            8px 16px;
+    border-radius:      0;
+}
+
+// The selected row gets the accent tint behind accent text.
+element selected normal, element selected active {
+    background-color:   @bg2;
+    text-color:         @fg1;
+}
+
+// Must inherit: otherwise the defaults above give the text fg0, and the
+// selected row's accent never reaches it.
+element-text {
+    text-color: inherit;
+}

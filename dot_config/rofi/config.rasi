@@ -1,0 +1,29 @@
+// Rofi configuration.
+//
+// Read by rofi each time it opens ($mod+d in i3). Behavior lives here and the
+// look in themes/neon.rasi, which @theme loads. @theme discards whatever
+// theme was loaded before it, rofi's built-in one included, so it comes after
+// the configuration block, and any theme tweak added here must come after it.
+// Full reference: https://davatorium.github.io/rofi/current/rofi.1/
+
+// ============================================================================
+// Behavior
+// ============================================================================
+
+configuration {
+    // Apps (drun) and shell commands (run); i3 opens straight into drun.
+    modi: "drun,run";
+
+    // Rows show the app name alone, without the generic name, such as
+    // "Web Browser", that rofi adds by default.
+    drun-display-format: "{name}";
+}
+
+// ============================================================================
+// Theme
+// ============================================================================
+
+// Replaces rofi's built-in theme with themes/neon.rasi, found by name in
+// ~/.config/rofi/themes/, the folder rofi-theme-selector lists. Last, as the
+// header says.
+@theme "neon"
