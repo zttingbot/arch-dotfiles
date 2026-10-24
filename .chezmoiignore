@@ -1,3 +1,4 @@
 # Repo files, not dotfiles: never copied into the home directory.
 LICENSE
+README.md
 STYLE.md
