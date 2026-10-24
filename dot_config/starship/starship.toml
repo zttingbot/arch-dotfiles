@@ -63,7 +63,7 @@ format = "[on](dimmed) [$symbol$branch]($style) "
 # files, or ⇡ when ahead of the remote; nothing at all when clean.
 [git_status]
 style = "red"
-format = "([$all_status$ahead_behind]($style)) "
+format = "([$all_status$ahead_behind]($style) )"
 
 # --- Languages ---------------------------------------------------------------
 
