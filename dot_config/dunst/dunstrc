@@ -1,0 +1,157 @@
+# Dunst configuration.
+#
+# Read by dunst when D-Bus starts it for the session's first notification
+# (i3's autostart exports DISPLAY so it can), and again on `dunstctl reload`.
+# Keys within a section are independent, so their order only groups them by
+# what they shape on screen; [global] comes first, then the urgency sections
+# from low to critical, the order notifications escalate in.
+# Full reference: https://dunst-project.org/documentation/
+#
+# Colors
+#   - Base #1e1e2e: every notification's background.
+#   - Text #faf2e6: summary and body above low urgency.
+#   - Grey #6c7086: low-urgency text, dimmed so routine notices recede.
+#   - Surface #313244: the low-urgency frame, barely set off from the base.
+#   - Cyan #48dfe0: the normal frame, the accent that marks focus.
+#   - Red #cc1f26: the critical frame.
+#
+# Kept in sync with ~/.config/ghostty/config
+#   - The base, text, cyan, red and grey hexes are Ghostty's.
+#
+# Kept in sync with ~/.config/i3/config
+#   - font is i3's font list, so notifications and window titles match.
+#   - The cyan and red frames are i3's focus and urgent colors.
+#   - The 44px top offset leaves 21px below the i3 bar, 23px tall at its 10pt font.
+
+# =============================================================================
+# Global
+# =============================================================================
+
+[global]
+
+# --- Placement ---------------------------------------------------------------
+
+    # Always the first monitor: follow = mouse or keyboard would chase focus
+    # across monitors and ignore monitor.
+    monitor = 0
+    follow = none
+
+    # Pixels from the top-right corner: 20 in from the edge, and 44 down to
+    # clear the bar; see "Kept in sync" above.
+    origin = top-right
+    offset = (20, 44)
+
+# --- Size --------------------------------------------------------------------
+
+    # Pixels, as (minimum, maximum): a notification grows with its text up to
+    # 320 wide and 200 tall.
+    width = (0, 320)
+    height = (0, 200)
+
+# --- Frame -------------------------------------------------------------------
+
+    # A 1px square border, matching i3's window borders.
+    frame_width = 1
+    corner_radius = 0
+
+    # Pixels between the text and the frame, the same on every side.
+    padding = 12
+    horizontal_padding = 12
+
+    # Percent, from 0 (opaque) to 100. Takes effect only while picom, which
+    # i3 starts, is compositing.
+    transparency = 10
+
+# --- Stacking ----------------------------------------------------------------
+
+    # At most 5 on screen; the rest wait for a free slot, and indicate_hidden
+    # shows how many are waiting.
+    notification_limit = 5
+    indicate_hidden = yes
+
+    # Pixels between stacked notifications. Above 0, each one gets its own
+    # frame instead of sharing one split by separators. Needs picom, as
+    # transparency does.
+    gap_size = 8
+
+    # Critical on top, then normal, then low.
+    sort = yes
+
+    # An identical repeat bumps a counter on the one already shown instead of
+    # stacking a copy.
+    stack_duplicates = true
+
+# --- Text --------------------------------------------------------------------
+
+    # i3's font list; see "Kept in sync" above. dunst draws no glyphs of its
+    # own, but scripts can send Nerd Font glyphs, which the second face
+    # covers. "Medium" applies to the whole list, so it must come last or it
+    # is read as part of a font name.
+    font = Adwaita Sans, MonoLisa Nerd Font Mono Medium 10
+
+    # Bold summary over the body. Markup is parsed in both, so senders can
+    # use bold, italics and links.
+    format = "<b>%s</b>\n%b"
+    markup = full
+
+    # dunst's defaults, kept so the layout is stated in one place.
+    alignment = left
+    vertical_alignment = center
+
+    # A line too long for the width loses its middle, so both its start and
+    # its end stay visible.
+    ellipsize = middle
+
+    # -1 never shows how long ago a notification arrived.
+    show_age_threshold = -1
+
+    # (A) and (U) flag notifications that carry actions or URLs.
+    show_indicators = yes
+
+    # Text only: app icons are never drawn.
+    icon_position = off
+
+# --- Mouse -------------------------------------------------------------------
+
+    # Mouse buttons:
+    #   left    closes this notification
+    #   middle  runs its default action, then closes it
+    #   right   closes every notification
+    mouse_left_click = close_current
+    mouse_middle_click = do_action, close_current
+    mouse_right_click = close_all
+
+# =============================================================================
+# Urgency
+# =============================================================================
+
+# Timeouts are in seconds; 0 would keep a notification until it is clicked.
+
+# --- Low ---------------------------------------------------------------------
+
+# Dimmed text and a frame close to the background keep routine notices out
+# of the way.
+[urgency_low]
+    background = "#1e1e2e"
+    foreground = "#6c7086"
+    frame_color = "#313244"
+    timeout = 5
+
+# --- Normal ------------------------------------------------------------------
+
+# What most apps send. The accent frame marks it as worth a look.
+[urgency_normal]
+    background = "#1e1e2e"
+    foreground = "#faf2e6"
+    frame_color = "#48dfe0"
+    timeout = 8
+
+# --- Critical ----------------------------------------------------------------
+
+# Errors and low battery. The red frame marks it, and it still times out
+# rather than waiting to be dismissed.
+[urgency_critical]
+    background = "#1e1e2e"
+    foreground = "#faf2e6"
+    frame_color = "#cc1f26"
+    timeout = 5
