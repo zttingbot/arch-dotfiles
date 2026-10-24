@@ -34,6 +34,7 @@
 #   - tmux's terminal-features names xterm-ghostty, the TERM Ghostty sets.
 #   - tmux's set-clipboard relies on Ghostty accepting OSC 52 writes, which
 #     the default clipboard-write = allow permits.
+#   - palette 9 (resize orange) is the brightred of tmux's prefix indicator.
 #
 # Kept in sync with ~/.config/picom/picom.conf
 #   - background-opacity is tuned for picom running without blur, its
