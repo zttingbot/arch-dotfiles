@@ -1,10 +1,11 @@
 # Dunst configuration.
 #
 # Read by dunst when D-Bus starts it for the session's first notification
-# (i3's autostart exports DISPLAY so it can), and again on `dunstctl reload`.
-# Keys within a section are independent, so their order only groups them by
-# what they shape on screen; [global] comes first, then the urgency sections
-# from low to critical, the order notifications escalate in.
+# (.xinitrc's session hooks export DISPLAY so it can), and again on
+# `dunstctl reload`. Keys within a section are independent, so their order
+# only groups them by what they shape on screen; [global] comes first, then
+# the urgency sections from low to critical, the order notifications escalate
+# in.
 # Full reference: https://dunst-project.org/documentation/
 #
 # Colors

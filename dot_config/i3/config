@@ -52,10 +52,6 @@ font pango:Adwaita Sans, MonoLisa Nerd Font Mono Medium 10
 # i3 does not supervise these, so one that dies stays dead until the next
 # restart.
 
-# Must run first: services started through D-Bus, dunst among them, otherwise
-# start without a display and fail silently.
-exec --no-startup-id systemctl --user import-environment DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP; dbus-update-activation-environment --systemd DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP
-
 # The compositor, without which rofi's translucent background has nothing to
 # blend with.
 exec --no-startup-id picom --config ~/.config/picom/picom.conf

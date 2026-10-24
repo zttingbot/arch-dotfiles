@@ -20,6 +20,18 @@
 # see "Kept in sync" above.
 export TERMINAL="ghostty"
 
+# Runs the distribution's session hooks, as the stock xinitrc does. Among
+# them, systemd's 50-systemd-user.sh passes DISPLAY and XAUTHORITY to services
+# started through D-Bus, dunst among them, which otherwise start without a
+# display and fail silently. Must run here, not from i3: i3 starts its exec
+# lines without waiting for them, so a service could start before the import.
+if [ -d /etc/X11/xinit/xinitrc.d ]; then
+  for f in /etc/X11/xinit/xinitrc.d/?*.sh; do
+    [ -x "$f" ] && . "$f"
+  done
+  unset f
+fi
+
 # =============================================================================
 # Window manager
 # =============================================================================
