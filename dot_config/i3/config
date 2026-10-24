@@ -20,7 +20,7 @@
 # Kept in sync with ~/.config/dunst/dunstrc
 #   - dunst uses this font list, and its normal and critical frames are the
 #     cyan focus and red urgent colors here.
-#   - Its 38px top offset clears the bar, 23px tall at the 10pt font.
+#   - Its top offset clears the bar, 23px tall at the 10pt font.
 #
 # Kept in sync with ~/.config/rofi/
 #   - Adwaita Sans is rofi's font too, and cyan marks its selected row.
