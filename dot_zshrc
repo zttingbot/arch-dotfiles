@@ -86,12 +86,23 @@ compinit
 # last 3 directories, then > on the next line, red after a failed command.
 # Elsewhere starship reads STARSHIP_CONFIG each time it draws a prompt, so the
 # export comes before `starship init`.
-if [[ "$TERM" == "linux" ]]; then
+#
+# Inside tmux, TERM is tmux's own, so the check asks tmux for the terminal of
+# the client the pane opened in. A pane keeps its prompt when viewed later from
+# another terminal; a plain prompt in Ghostty is harmless, unlike starship's
+# glyphs on the console. A detached server reports no terminal, so its panes
+# get starship.
+outer_term=$TERM
+if [[ -n "$TMUX" ]]; then
+  outer_term=$(tmux display-message -p '#{client_termname}')
+fi
+if [[ "$outer_term" == "linux" ]]; then
   PROMPT=$'%B%F{cyan}%3~%f%b\n%(?.%F{green}.%F{red})>%f '
 elif command -v starship >/dev/null 2>&1; then
   export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
   eval "$(starship init zsh)"
 fi
+unset outer_term
 
 # --- fnm ---------------------------------------------------------------------
 
