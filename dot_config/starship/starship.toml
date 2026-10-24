@@ -1,15 +1,18 @@
-# Starship configuration, for graphical terminals.
+# Starship configuration.
 #
 # Read by `starship prompt` each time the shell draws a prompt, so an edit
-# shows on the next one; .zshrc points STARSHIP_CONFIG here unless $TERM is
-# linux. Top-level keys come before the first [table], since TOML files every
-# key after a table header under that table, and the tables then follow the
-# prompt left to right, in the order of format.
+# shows on the next one. .zshrc points STARSHIP_CONFIG here in graphical
+# terminals only; the Linux console gets a plain zsh prompt instead. Top-level
+# keys come before the first [table], since TOML files every key after a table
+# header under that table, and the tables then follow the prompt left to
+# right, in the order of format. A module in format with no table here, such
+# as directory or character, runs on starship's defaults.
 # Full reference: https://starship.rs/config/
 #
 # Colors
-#   Styles name ANSI colors, so the terminal's palette sets the hexes; the
-#   language modules keep starship's own default colors.
+#   Styles name ANSI colors, so the terminal's palette sets the hexes. The
+#   directory, branch, prompt character and language modules keep starship's
+#   default colors.
 #   - Cyan: the directory.
 #   - Purple: the git branch.
 #   - Red: git status, and the prompt character after a failed command.
@@ -23,11 +26,6 @@
 #     one's Nerd Fonts name, searchable at
 #     https://www.nerdfonts.com/cheat-sheet. Ghostty's MonoLisa Nerd Font
 #     Mono draws them.
-#
-# Kept in sync with starship-tty.toml
-#   - format is the same minus the language modules, and directory,
-#     git_status and cmd_duration match; git_branch and character differ only
-#     in their glyphs.
 
 "$schema" = 'https://starship.rs/config-schema.json'
 
@@ -55,20 +53,10 @@ add_newline = false
 # Modules
 # =============================================================================
 
-# --- Directory ---------------------------------------------------------------
-
-# At most the last 3 path components. Inside a git repo the path starts at
-# the repo's root instead, so the repo name stays visible.
-[directory]
-style = "bold cyan"
-truncation_length = 3
-truncate_to_repo = true
-
 # --- Git ---------------------------------------------------------------------
 
 [git_branch]
 symbol = "\uF418 " # oct-git_branch
-style = "bold purple"
 format = "[on](dimmed) [$symbol$branch]($style) "
 
 # A compact summary of the working tree, such as !? for changes and untracked
@@ -80,9 +68,9 @@ format = "([$all_status$ahead_behind]($style)) "
 # --- Languages ---------------------------------------------------------------
 
 # Each shows only in a directory that uses its toolchain, with the version
-# in use.
+# in use. nodejs needs no symbol line: starship's own glyph for it is already
+# dev-nodejs_small.
 [nodejs]
-symbol = "\uE718 " # dev-nodejs_small
 format = "[via](dimmed) [$symbol($version )]($style)"
 
 [python]
@@ -103,14 +91,7 @@ format = "[via](dimmed) [$symbol$context]($style) "
 
 # --- Command duration --------------------------------------------------------
 
-# Milliseconds: shown only when the last command ran 2s or longer.
+# Shown only when the last command ran 2s or longer, starship's default
+# threshold.
 [cmd_duration]
-min_time = 2000
 format = "[took](dimmed) [$duration](yellow) "
-
-# --- Prompt character --------------------------------------------------------
-
-# Green normally, red after a failed command.
-[character]
-success_symbol = "[❯](bold green)" # U+276F, heavy right angle ornament
-error_symbol = "[❯](bold red)"     # U+276F, heavy right angle ornament
