@@ -1,0 +1,32 @@
+#!/bin/sh
+# Screenshot script.
+#
+# Run by i3's Print and $mod+Print bindings, or from a shell, as
+# `screenshot full` or `screenshot region` (drag to select). Saves the image
+# into ~/Pictures/Screenshots and copies it to the clipboard. Each step needs
+# the one before it: maim saves into the directory, and xclip copies the file
+# maim saved. So the script stops at the first failure, and a cancelled
+# selection leaves no file and nothing to copy. Full references: maim(1) and
+# xclip(1).
+
+set -e
+
+mkdir -p ~/Pictures/Screenshots
+
+# mktemp creates the file under a random suffix, so no other capture can be
+# given the same name, even one started at the same moment.
+f=$(mktemp ~/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S)-XXXXXX.png)
+
+# Removes the reserved file if maim fails or the selection is cancelled; a
+# successful capture keeps it.
+trap 'rm -f "$f"' EXIT
+
+if [ "$1" = "region" ]; then
+  maim -s "$f"
+else
+  maim "$f"
+fi
+
+trap - EXIT
+
+xclip -selection clipboard -t image/png -i "$f"
