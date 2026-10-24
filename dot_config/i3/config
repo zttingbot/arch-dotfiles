@@ -98,9 +98,6 @@ bindsym $mod+Return exec $terminal
 # Lists installed applications only, never bare binaries. Its look lives in
 # ~/.config/rofi/.
 bindsym $mod+d exec --no-startup-id rofi -show drun
-# Disabled alternatives: rofi with run mode too, or the dmenu-based launcher.
-# bindcode $mod+40 exec "rofi -modi drun,run -show drun"
-# bindcode $mod+40 exec --no-startup-id i3-dmenu-desktop
 
 # Asks the window to close rather than killing it, so an editor still gets to
 # prompt about unsaved work.
