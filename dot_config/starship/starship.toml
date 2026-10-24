@@ -1,0 +1,116 @@
+# Starship configuration, for graphical terminals.
+#
+# Read by `starship prompt` each time the shell draws a prompt, so an edit
+# shows on the next one; .zshrc points STARSHIP_CONFIG here unless $TERM is
+# linux. Top-level keys come before the first [table], since TOML files every
+# key after a table header under that table, and the tables then follow the
+# prompt left to right, in the order of format.
+# Full reference: https://starship.rs/config/
+#
+# Colors
+#   Styles name ANSI colors, so the terminal's palette sets the hexes; the
+#   language modules keep starship's own default colors.
+#   - Cyan: the directory.
+#   - Purple: the git branch.
+#   - Red: git status, and the prompt character after a failed command.
+#   - Green: the prompt character after a successful one.
+#   - Yellow: how long the last command took.
+#   - Dimmed: the connecting words on, via and took.
+#
+# Conventions
+#   - Nerd Font glyphs are written as escapes, since these private-use
+#     codepoints are invisible in most editors. A trailing comment gives each
+#     one's Nerd Fonts name, searchable at
+#     https://www.nerdfonts.com/cheat-sheet. Ghostty's MonoLisa Nerd Font
+#     Mono draws them.
+#
+# Kept in sync with starship-tty.toml
+#   - format is the same minus the language modules, and directory,
+#     git_status and cmd_duration match; git_branch and character differ only
+#     in their glyphs.
+
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# =============================================================================
+# Layout
+# =============================================================================
+
+# One line of context, then the input on the next line, with no blank line
+# before the prompt.
+format = """
+$directory\
+$git_branch\
+$git_status\
+$nodejs\
+$python\
+$rust\
+$golang\
+$docker_context\
+$cmd_duration\
+$line_break\
+$character"""
+add_newline = false
+
+# =============================================================================
+# Modules
+# =============================================================================
+
+# --- Directory ---------------------------------------------------------------
+
+# At most the last 3 path components. Inside a git repo the path starts at
+# the repo's root instead, so the repo name stays visible.
+[directory]
+style = "bold cyan"
+truncation_length = 3
+truncate_to_repo = true
+
+# --- Git ---------------------------------------------------------------------
+
+[git_branch]
+symbol = "\uF418 " # oct-git_branch
+style = "bold purple"
+format = "[on](dimmed) [$symbol$branch]($style) "
+
+# A compact summary of the working tree, such as !? for changes and untracked
+# files, or ⇡ when ahead of the remote; nothing at all when clean.
+[git_status]
+style = "red"
+format = "([$all_status$ahead_behind]($style)) "
+
+# --- Languages ---------------------------------------------------------------
+
+# Each shows only in a directory that uses its toolchain, with the version
+# in use.
+[nodejs]
+symbol = "\uE718 " # dev-nodejs_small
+format = "[via](dimmed) [$symbol($version )]($style)"
+
+[python]
+symbol = "\uE235 " # fae-python
+format = "[via](dimmed) [$symbol($version )]($style)"
+
+[rust]
+symbol = "\uE7A8 " # dev-rust
+format = "[via](dimmed) [$symbol($version )]($style)"
+
+[golang]
+symbol = "\uE627 " # seti-go
+format = "[via](dimmed) [$symbol($version )]($style)"
+
+[docker_context]
+symbol = "\uF308 " # linux-docker
+format = "[via](dimmed) [$symbol$context]($style) "
+
+# --- Command duration --------------------------------------------------------
+
+# Milliseconds: shown only when the last command ran 2s or longer.
+[cmd_duration]
+min_time = 2000
+format = "[took](dimmed) [$duration](yellow) "
+
+# --- Prompt character --------------------------------------------------------
+
+# Green normally, red after a failed command.
+[character]
+success_symbol = "[❯](bold green)" # U+276F, heavy right angle ornament
+error_symbol = "[❯](bold red)"     # U+276F, heavy right angle ornament
