@@ -1,0 +1,28 @@
+#!/bin/sh
+# X session configuration.
+#
+# Run by startx once the X server is up. The session lasts as long as the last
+# command, so everything else comes before the `exec i3` that ends this file.
+# Full reference: https://wiki.archlinux.org/title/Xinit
+#
+# Kept in sync with ~/.config/i3/config
+#   - TERMINAL names the same terminal as i3's $terminal.
+
+# =============================================================================
+# Environment
+# =============================================================================
+
+# No STARSHIP_CONFIG here: starship only ever runs from .zshrc, which exports
+# it right before `starship init`, so an export at this level could never be
+# the one that wins.
+
+# Default terminal for apps that read $TERMINAL, such as i3-sensible-terminal;
+# see "Kept in sync" above.
+export TERMINAL="ghostty"
+
+# =============================================================================
+# Window manager
+# =============================================================================
+
+# Replaces this shell, so the X session ends when i3 exits.
+exec i3
