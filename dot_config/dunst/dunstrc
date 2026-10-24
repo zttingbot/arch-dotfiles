@@ -22,7 +22,8 @@
 # Kept in sync with ~/.config/i3/config
 #   - font is i3's font list, so notifications and window titles match.
 #   - The cyan and red frames are i3's focus and urgent colors.
-#   - The 44px top offset leaves 21px below the i3 bar, 23px tall at its 10pt font.
+#   - The 44px top offset leaves 21px below the i3 bar, which is 23px tall at
+#     i3's font size.
 
 # =============================================================================
 # Global
@@ -37,15 +38,15 @@
     monitor = 0
     follow = none
 
-    # Pixels from the top-right corner: 20 in from the edge, and 44 down to
-    # clear the bar; see "Kept in sync" above.
+    # Pixels from the top-right corner: in from the edge, and down far enough
+    # to clear the bar; see "Kept in sync" above.
     origin = top-right
     offset = (20, 44)
 
 # --- Size --------------------------------------------------------------------
 
     # Pixels, as (minimum, maximum): a notification grows with its text up to
-    # 320 wide and 200 tall.
+    # the maximum.
     width = (0, 320)
     height = (0, 200)
 
@@ -65,7 +66,7 @@
 
 # --- Stacking ----------------------------------------------------------------
 
-    # At most 5 on screen; the rest wait for a free slot, and indicate_hidden
+    # Notifications past the limit wait for a free slot, and indicate_hidden
     # shows how many are waiting.
     notification_limit = 5
     indicate_hidden = yes

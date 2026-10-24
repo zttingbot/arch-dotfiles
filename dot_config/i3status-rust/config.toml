@@ -12,9 +12,9 @@
 #     network red #ff0044. Everything else uses the theme.
 #
 # Kept in sync with ~/.config/i3/config
-#   - The bar's 10pt font sets the icon size in icons_format, the battery
+#   - The bar's font size sets the icon size in icons_format, the battery
 #     icon's 69% scale and rise, and the separator in themes/neon.toml.
-#   - The 5% volume keys set the volume block's step_width.
+#   - i3's volume keys step by the same amount as step_width.
 
 # =============================================================================
 # Appearance
@@ -104,8 +104,7 @@ time = "\U0000EC75" # cod-clockface
 # volume and battery readings.
 #
 # Magenta when idle. Info is set to match idle, so the icon only changes color
-# at the 75% warning and 90% critical thresholds, rather than for most of the
-# day.
+# at the warning and critical thresholds, rather than for most of the day.
 [[block]]
 block = "cpu"
 interval = 5

@@ -30,7 +30,7 @@
 #   - The base, text, cyan, red and grey hexes are shared with them.
 #
 # Kept in sync with ~/.config/tmux/tmux.conf
-#   - scrollback-limit (100MB, roughly 100k lines) matches history-limit.
+#   - scrollback-limit matches history-limit, converted from lines to bytes.
 #   - tmux's terminal-features names xterm-ghostty, the TERM Ghostty sets.
 #   - tmux's set-clipboard relies on Ghostty accepting OSC 52 writes, which
 #     the default clipboard-write = allow permits.
@@ -67,8 +67,8 @@ font-synthetic-style = false
 # Points, scaled for the screen's DPI.
 font-size = 12
 
-# MonoLisa's default leading is tight; 10% more is easier on the eyes over
-# long sessions and opens up nvim splits and diffs.
+# MonoLisa's default leading is tight; the extra height is easier on the eyes
+# over long sessions and opens up nvim splits and diffs.
 adjust-cell-height = 10%
 
 # --- Features ----------------------------------------------------------------
@@ -146,8 +146,8 @@ background = #1e1e2e
 foreground = #faf2e6
 
 # picom runs without blur (see "Kept in sync" above), so whatever is behind
-# the window stays sharp. 0.95 (1.0 is opaque) keeps some depth while cutting
-# the noise around glyph stems.
+# the window stays sharp. Staying just short of opaque (1.0) keeps some depth
+# while cutting the noise around glyph stems.
 background-opacity = 0.95
 
 # WCAG contrast ratio, from 1 (none) to 21 (black on white). 1.1 only lifts

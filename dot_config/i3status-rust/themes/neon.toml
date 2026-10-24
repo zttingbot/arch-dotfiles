@@ -16,7 +16,7 @@
 #   them.
 #
 # Kept in sync with ~/.config/i3/config
-#   - The bar's 10pt font sets the width of the separator.
+#   - The bar's font size sets the width of the separator.
 
 # =============================================================================
 # Colors

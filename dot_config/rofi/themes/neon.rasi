@@ -20,8 +20,8 @@
 //   - The base, text and cyan hexes are Ghostty's.
 //
 // Kept in sync with ~/.config/i3/config
-//   - Adwaita Sans is i3's font for window titles and the bar, here at 14pt
-//     rather than 10.
+//   - Adwaita Sans is i3's font for window titles and the bar, here at a
+//     larger size.
 //   - Cyan marks the selection here as it marks focus in i3.
 
 // ============================================================================
@@ -60,8 +60,8 @@
 
 // --- Window -----------------------------------------------------------------
 
-// The popup, centered on the monitor. 560px wide, with a 1px square border in
-// the accent, like i3's focused window.
+// The popup, centered on the monitor, with a square border in the accent, like
+// i3's focused window.
 window {
     background-color:   @bg0;
     location:       center;
@@ -87,7 +87,7 @@ entry {
 
 // --- Results ----------------------------------------------------------------
 
-// Up to 8 rows in one column; the list shrinks when fewer match.
+// The list shrinks when fewer rows match than it can hold.
 listview {
     lines:      8;
     columns:    1;
