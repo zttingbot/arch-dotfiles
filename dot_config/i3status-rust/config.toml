@@ -8,8 +8,8 @@
 #   - Text is always #faf2e6, written by hand into every format, so a block's
 #     state color reaches only its icon.
 #   - Icon colors: CPU magenta #ff2bd6, clock azure #009bff, battery ramps
-#     cyan -> yellow -> orange -> red, muted volume grey #6c7086, a down network
-#     red #ff0044. Everything else uses the theme.
+#     cyan -> yellow -> orange -> red, muted volume grey #6c7086, a down
+#     network red #ff0044. Everything else uses the theme.
 #
 # Kept in sync with ~/.config/i3/config
 #   - The bar's 10pt font sets the icon size in icons_format, the battery
@@ -34,8 +34,8 @@ icons_format = "<span font_family='MonoLisa Nerd Font Mono' size='12288'>{icon}<
 [theme]
 theme = "neon"
 
-# Must be the Nerd Font variant: plain "material" uses codepoints the Nerd Fonts
-# do not carry, and draws empty boxes instead.
+# Must be the Nerd Font variant: plain "material" uses codepoints the Nerd
+# Fonts do not carry, and draws empty boxes instead.
 [icons]
 icons = "material-nf"
 
