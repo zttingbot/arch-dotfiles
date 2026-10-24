@@ -34,6 +34,10 @@
 #   - tmux's terminal-features names xterm-ghostty, the TERM Ghostty sets.
 #   - tmux's set-clipboard relies on Ghostty accepting OSC 52 writes, which
 #     the default clipboard-write = allow permits.
+#
+# Kept in sync with ~/.config/picom/picom.conf
+#   - background-opacity is tuned for picom running without blur, its
+#     default.
 
 # =============================================================================
 # Font
@@ -113,9 +117,9 @@ freetype-load-flags = hinting,no-force-autohint,no-monochrome,autohint,light
 # No titlebar or border of Ghostty's own; see "Kept in sync" above.
 window-decoration = false
 
-# The tab bar stays hidden even with several tabs, keeping the window
-# borderless.
-window-show-tab-bar = never
+# The tab bar shows even with a single tab, so opening a second tab doesn't
+# shrink the terminal grid and reflow what is on screen.
+window-show-tab-bar = always
 
 # Theme the chrome from the colors below, not the desktop's light or dark
 # setting.
@@ -141,8 +145,9 @@ window-padding-balance = true
 background = #1e1e2e
 foreground = #faf2e6
 
-# picom runs without blur, so whatever is behind the window stays sharp. 0.95
-# (1.0 is opaque) keeps some depth while cutting the noise around glyph stems.
+# picom runs without blur (see "Kept in sync" above), so whatever is behind
+# the window stays sharp. 0.95 (1.0 is opaque) keeps some depth while cutting
+# the noise around glyph stems.
 background-opacity = 0.95
 
 # WCAG contrast ratio, from 1 (none) to 21 (black on white). 1.1 only lifts
