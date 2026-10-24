@@ -16,13 +16,25 @@
 # Kept in sync with ~/.config/i3status-rust/
 #   - The 10pt font sets the bar's icon sizes and the gap between blocks.
 #   - The 5% volume keys match the volume block's scroll step.
+#
+# Kept in sync with ~/.config/dunst/dunstrc
+#   - dunst uses this font list, and its normal and critical frames are the
+#     cyan focus and red urgent colors here.
+#   - Its 38px top offset clears the bar, 23px tall at the 10pt font.
+#
+# Kept in sync with ~/.config/rofi/
+#   - Adwaita Sans is rofi's font too, and cyan marks its selected row.
+#
+# Kept in sync with ~/.xinitrc
+#   - $terminal names the same terminal as TERMINAL there.
 
 # =============================================================================
 # Basics
 # =============================================================================
 
 # Super is the one modifier no application claims for itself. Naming the
-# terminal once means the rest of the file never repeats it.
+# terminal once means the rest of the file never repeats it; see "Kept in
+# sync" above.
 set $mod Mod4
 set $terminal ghostty
 
@@ -30,6 +42,7 @@ set $terminal ghostty
 # available, and looks the same size as MonoLisa in the terminal. The Nerd Font
 # after it only supplies icons, in window titles and the bar. "Medium" applies
 # to the whole list, so it must come last or it is read as part of a font name.
+# dunst and rofi share it; see "Kept in sync" above.
 font pango:Adwaita Sans, MonoLisa Nerd Font Mono Medium 10
 
 # =============================================================================
@@ -140,8 +153,8 @@ bindsym $mod+Shift+space floating toggle
 
 # --- Resize ------------------------------------------------------------------
 
-# Resizes in single steps instead of i3's ten: holding a key repeats it, so fine
-# steps cost no speed. Return, Escape or $mod+r leaves the mode.
+# Resizes in single steps instead of i3's ten: holding a key repeats it, so
+# fine steps cost no speed. Return, Escape or $mod+r leaves the mode.
 mode "resize" {
         bindsym h resize shrink width 1 px or 1 ppt
         bindsym j resize grow height 1 px or 1 ppt
@@ -217,7 +230,8 @@ bindsym $mod+Shift+0 move container to workspace number $ws10
 # Session
 # =============================================================================
 
-# Reload rereads this file; restart also restarts i3 itself, keeping the layout.
+# Reload rereads this file; restart also restarts i3 itself, keeping the
+# layout.
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 
