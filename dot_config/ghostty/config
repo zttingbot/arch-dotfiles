@@ -26,7 +26,7 @@
 #     A proportional font outside the terminal is intentional, not drift.
 #   - window-decoration = false relies on i3 drawing a 1px border on Ghostty.
 #
-# Kept in sync with ~/.config/dunst/dunstrc and ~/.config/rofi/colors.rasi
+# Kept in sync with ~/.config/dunst/dunstrc and ~/.config/rofi/
 #   - The base, text, cyan, red and grey hexes are shared with them.
 #
 # Kept in sync with ~/.config/tmux/tmux.conf
