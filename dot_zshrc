@@ -16,11 +16,10 @@
 # =============================================================================
 
 # Programs read VISUAL or EDITOR depending on their age, so both point at nvim.
-# SUDO_EDITOR is set as well because `sudoedit` reads only that variable, with
-# no fallback to EDITOR.
+# `sudoedit` reads VISUAL too, after SUDO_EDITOR, so it needs nothing of its
+# own.
 export EDITOR="nvim"
 export VISUAL="$EDITOR"
-export SUDO_EDITOR="$EDITOR"
 
 # =============================================================================
 # Paths
