@@ -1,2 +1,3 @@
-# Repo documentation, not a dotfile: never copied into the home directory.
+# Repo files, not dotfiles: never copied into the home directory.
+LICENSE
 STYLE.md
