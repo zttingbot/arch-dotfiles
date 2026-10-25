@@ -6,9 +6,6 @@
 #
 # Kept in sync with ~/.config/tmux/tmux.conf
 #   - The tpm path is the one tmux.conf runs.
-#
-# Kept in sync with run_onchange_before_install-packages.sh
-#   - It installs git, which git-repo entries are cloned with, before they run.
 
 # TPM: a git checkout rather than an archive, since TPM updates itself with
 # git (prefix U). With no refreshPeriod chezmoi never pulls it, so it only
