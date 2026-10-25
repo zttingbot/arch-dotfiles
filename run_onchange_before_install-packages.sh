@@ -26,7 +26,7 @@ set -- "$@" libpulse pipewire-pulse maim xclip
 
 # The terminal and the shell inside it, with everything .zshrc loads.
 set -- "$@" ghostty tmux zsh zsh-autosuggestions zsh-syntax-highlighting \
-  starship fzf zoxide fnm neovim
+  starship fzf zoxide mise neovim
 
 # git, for the TPM clone; see "Kept in sync" above.
 set -- "$@" git

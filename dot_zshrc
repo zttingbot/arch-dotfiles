@@ -10,6 +10,9 @@
 #   2. compinit, which defines the `compdef` that zoxide and fzf call.
 #   3. The tools themselves, with syntax highlighting last among them.
 #   4. Local overrides.
+#
+# Kept in sync with ~/.config/mise/config.toml
+#   - The version files the mise section names are the ones it enables.
 
 # =============================================================================
 # Environment
@@ -103,13 +106,14 @@ elif command -v starship >/dev/null 2>&1; then
 fi
 unset outer_term
 
-# --- fnm ---------------------------------------------------------------------
+# --- mise --------------------------------------------------------------------
 
-# Node version manager: puts the default version (`fnm default`) on PATH, and
-# on every `cd` switches to the version pinned in a .node-version or .nvmrc,
-# searching parent directories too so monorepo subfolders pick it up.
-if command -v fnm >/dev/null 2>&1; then
-  eval "$(fnm env --use-on-cd --version-file-strategy=recursive --shell zsh)"
+# Runtime version manager: puts the global tools on PATH and, on every `cd`,
+# switches to the versions pinned in a mise.toml, .nvmrc or .node-version,
+# searching parent directories too so monorepo subfolders pick them up. See
+# "Kept in sync" above.
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate zsh)"
 fi
 
 # --- Autosuggestions ---------------------------------------------------------

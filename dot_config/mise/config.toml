@@ -1,0 +1,31 @@
+# mise configuration.
+#
+# Global config, read by mise on every prompt and `cd` once .zshrc activates
+# it. A mise.toml or version file found in the current directory or one of its
+# parents overrides the tools here. TOML tables can come in any order, so
+# settings goes first: it decides which of those version files mise reads.
+# Full reference: https://mise.jdx.dev/configuration.html
+#
+# Kept in sync with ~/.zshrc
+#   - The version files its mise section names are the ones enabled here.
+
+# =============================================================================
+# Settings
+# =============================================================================
+
+[settings]
+
+# mise ignores .nvmrc and .node-version unless a tool is listed here. node is
+# opted in so projects that pin Node for nvm or fnm keep working without a
+# mise.toml; see "Kept in sync" above.
+idiomatic_version_file_enable_tools = ["node"]
+
+# =============================================================================
+# Tools
+# =============================================================================
+
+[tools]
+
+# The fallback outside any pinned project. "lts" resolves to the newest LTS
+# release when mise installs, so `mise up` moves to the next LTS line.
+node = "lts"
