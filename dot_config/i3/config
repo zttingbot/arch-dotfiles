@@ -49,8 +49,8 @@ font pango:Adwaita Sans, MonoLisa Nerd Font Mono Medium 10
 # Autostart
 # =============================================================================
 
-# i3 does not supervise these, so one that dies stays dead until the next
-# restart.
+# i3 does not supervise these, and restarting i3 does not rerun exec lines,
+# so one that dies stays dead until it is started by hand or the next session.
 
 # The compositor, without which rofi's translucent background has nothing to
 # blend with.
