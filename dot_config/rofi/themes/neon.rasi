@@ -9,7 +9,7 @@
 //
 // Colors
 //   Hexes may carry a two-digit alpha suffix, from 00 (clear) to FF (opaque).
-//   - bg0 #1e1e2e (base, opaque): the window background.
+//   - bg0 #1e1e2e (base) at D9 (~85%): the window background.
 //   - bg2 #48dfe0 at 33 (~20%): the selected row's tint.
 //   - fg0 #faf2e6 (text): every row's text.
 //   - fg1 #48dfe0 (cyan): the selected row's text.
@@ -23,6 +23,9 @@
 //   - Adwaita Sans is i3's font for window titles and the bar, here at a
 //     larger size.
 //   - Cyan marks the selection here as it marks focus in i3.
+//
+// Kept in sync with ~/.config/picom/picom.conf
+//   - bg0's alpha is tuned for picom's background blur.
 
 // ============================================================================
 // Palette
@@ -30,7 +33,7 @@
 
 // Named in the header's Colors list.
 * {
-    bg0:        #1e1e2eFF;
+    bg0:        #1e1e2eD9;
     bg2:        #48dfe033;
     fg0:        #faf2e6;
     fg1:        #48dfe0;
