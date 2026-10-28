@@ -141,8 +141,9 @@ fi
 
 # --- Syntax highlighting -----------------------------------------------------
 
-# Last of the tools: it hooks every widget defined before it, so a widget added
-# after it, including one in ~/.zshrc.local, goes unhighlighted.
+# Last of the tools, as upstream asks. On zsh 5.9 and later it highlights from
+# a redraw hook, so widgets defined after it, even in ~/.zshrc.local, are
+# highlighted too.
 if [[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
   source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
