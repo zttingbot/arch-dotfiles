@@ -75,23 +75,9 @@ adjust-cell-height = 10%
 
 # --- Features ----------------------------------------------------------------
 
-# No font-feature lines, on purpose:
-#   - ss01, ss02, ss07, ss08 and zero were chosen when this MonoLisa was
-#     generated, so the build bakes them in and strips their tags. Lookups in
-#     the default-on liga feature apply them: zero -> zero.zero (#163),
-#     asterisk -> asterisk.ss01 (#164), brace{left,right} -> .ss07 (#169),
-#     paren{left,right} -> .ss08 (#170). ss02 left no variant glyphs; its
-#     outlines replace the originals. Setting any of them is a no-op.
-#   - The sets this build still exposes as toggles (ss03-ss06, ss09-ss18)
-#     stay off.
-#   - Ligatures (calt and liga) are on by default, and font-shaping-break
-#     defaults to cursor, which splits a ligature back into characters while
-#     the cursor is inside it.
-#
-# Must not be `font-feature = -liga` to drop ligatures: liga also carries the
-# baked-in sets above, so it would revert the slashed zero, the asterisk, the
-# braces and the parens too. Use `-calt` alone; lookups #163-#170 live in liga
-# and survive it.
+# Must not be `font-feature = -liga` to drop ligatures: this MonoLisa build
+# bakes its chosen stylistic sets (the slashed zero, asterisk, braces and
+# parens) into liga, so it would revert them too. Use `-calt` alone.
 
 # --- Rendering ---------------------------------------------------------------
 
@@ -103,11 +89,10 @@ adjust-cell-height = 10%
 # native rebalances every font-style above.
 alpha-blending = linear-corrected
 
-# The Nerd Fonts patcher strips TrueType hinting (maxSizeOfInstructions = 0,
-# no fpgm, prep or cvt, and a gasp table asking for grayscale AA only), so
-# FreeType's autohinter is the only thing gridfitting these glyphs; no-autohint
-# would leave them unhinted and mushy at 12pt. light hints vertically only,
-# keeping MonoLisa's horizontal proportions and advance widths.
+# The Nerd Fonts patcher strips the font's own hinting, so FreeType's
+# autohinter is the only thing gridfitting these glyphs; no-autohint would
+# leave them unhinted and mushy at 12pt. light hints vertically only, keeping
+# MonoLisa's horizontal proportions and advance widths.
 freetype-load-flags = hinting,no-force-autohint,no-monochrome,autohint,light
 
 # =============================================================================
