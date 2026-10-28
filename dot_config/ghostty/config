@@ -37,8 +37,7 @@
 #   - palette 9 (resize orange) is the brightred of tmux's prefix indicator.
 #
 # Kept in sync with ~/.config/picom/picom.conf
-#   - background-opacity is tuned for picom running without blur, its
-#     default.
+#   - background-opacity is tuned for picom's background blur.
 
 # =============================================================================
 # Font
@@ -146,10 +145,11 @@ window-padding-balance = true
 background = #1e1e2e
 foreground = #faf2e6
 
-# picom runs without blur (see "Kept in sync" above), so whatever is behind
-# the window stays sharp. Staying just short of opaque (1.0) keeps some depth
-# while cutting the noise around glyph stems.
-background-opacity = 0.95
+# picom blurs whatever is behind the window (see "Kept in sync" above), so
+# the background can be clearly see-through without busy shapes crowding the
+# glyphs. Ghostty's own background-blur does nothing under i3. Nearer 1.0 the
+# blur all but vanishes; much lower and the text loses contrast.
+background-opacity = 0.85
 
 # WCAG contrast ratio, from 1 (none) to 21 (black on white). 1.1 only lifts
 # text that is near-invisible against its own background, such as black on
