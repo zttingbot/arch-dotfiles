@@ -8,8 +8,15 @@
 #   - The tpm path is the one tmux.conf runs.
 
 # TPM: a git checkout rather than an archive, since TPM updates itself with
-# git (prefix U). With no refreshPeriod chezmoi never pulls it, so it only
-# clones TPM on a new machine.
+# git (prefix U). No refreshPeriod, so chezmoi leaves updates to TPM.
 [".config/tmux/plugins/tpm"]
     type = "git-repo"
     url = "https://github.com/tmux-plugins/tpm"
+
+# Neovim: the check around this entry clones it only when ~/.config/nvim is
+# missing, so an existing config is left alone.
+{{ if not (stat (joinPath .chezmoi.destDir ".config/nvim")) -}}
+[".config/nvim"]
+    type = "git-repo"
+    url = "https://github.com/zttingbot/neovim-config"
+{{ end -}}
