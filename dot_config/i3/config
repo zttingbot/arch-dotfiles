@@ -125,7 +125,6 @@ bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
-# Switches focus between the tiling and floating layers.
 bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 # Disabled: $mod+d is the launcher.
@@ -133,9 +132,8 @@ bindsym $mod+a focus parent
 
 # --- Layout ------------------------------------------------------------------
 
-# A split decides where the next window opens; toggling flips the windows
-# already there. Horizontal split sits on b because $mod+h already moves focus
-# left.
+# A split sets where the next window opens; toggling flips the windows already
+# there. Horizontal split sits on b because $mod+h already moves focus left.
 bindsym $mod+b split h
 bindsym $mod+v split v
 bindsym $mod+e layout toggle split
@@ -223,8 +221,6 @@ bindsym $mod+Shift+0 move container to workspace number $ws10
 # Session
 # =============================================================================
 
-# Reload rereads this file; restart also restarts i3 itself, keeping the
-# layout.
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 
@@ -236,8 +232,6 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcu
 # Status bar
 # =============================================================================
 
-# i3status-rs finds its own config in ~/.config/i3status-rust/, and the bar
-# inherits the font set above.
 bar {
         status_command i3status-rs
         position top

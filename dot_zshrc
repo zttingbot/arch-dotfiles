@@ -109,8 +109,7 @@ unset outer_term
 # --- mise --------------------------------------------------------------------
 
 # Runtime version manager: puts the global tools on PATH and, on every `cd`,
-# switches to the versions pinned in a mise.toml, .nvmrc or .node-version,
-# searching parent directories too so monorepo subfolders pick them up. See
+# switches to the versions pinned in a mise.toml, .nvmrc or .node-version; see
 # "Kept in sync" above.
 if command -v mise >/dev/null 2>&1; then
   eval "$(mise activate zsh)"

@@ -82,7 +82,6 @@ inputbar {
     children:   [ entry ];
 }
 
-// The placeholder shows while nothing is typed.
 entry {
     placeholder         : "Search";
     placeholder-color   : @fg2;

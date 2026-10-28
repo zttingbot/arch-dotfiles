@@ -5,8 +5,7 @@
 # terminals only; the Linux console gets a plain zsh prompt instead. Top-level
 # keys come before the first [table], since TOML files every key after a table
 # header under that table, and the tables then follow the prompt left to
-# right, in the order of format. A module in format with no table here, such
-# as directory or character, runs on starship's defaults.
+# right, in the order of format.
 # Full reference: https://starship.rs/config/
 #
 # Colors
@@ -67,8 +66,7 @@ format = "([$all_status$ahead_behind]($style) )"
 
 # --- Languages ---------------------------------------------------------------
 
-# Each shows only in a directory that uses its toolchain, with the version
-# in use. nodejs needs no symbol line: starship's own glyph for it is already
+# nodejs needs no symbol line: starship's own glyph for it is already
 # dev-nodejs_small.
 [nodejs]
 format = "[via](dimmed) [$symbol($version )]($style)"
@@ -91,7 +89,5 @@ format = "[via](dimmed) [$symbol$context]($style) "
 
 # --- Command duration --------------------------------------------------------
 
-# Shown only when the last command ran 2s or longer, starship's default
-# threshold.
 [cmd_duration]
 format = "[took](dimmed) [$duration](yellow) "
