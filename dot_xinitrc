@@ -12,10 +12,6 @@
 # Environment
 # =============================================================================
 
-# No STARSHIP_CONFIG here: starship only ever runs from .zshrc, which exports
-# it right before `starship init`, so an export at this level could never be
-# the one that wins.
-
 # Default terminal for apps that read $TERMINAL, such as i3-sensible-terminal;
 # see "Kept in sync" above.
 export TERMINAL="ghostty"
