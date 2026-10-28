@@ -37,9 +37,11 @@ set -- "$@" libpulse pipewire-pulse maim xclip
 
 # --- Terminal and shell ------------------------------------------------------
 
-# The terminal and the shell inside it, with everything .zshrc loads.
+# The terminal and the shell inside it, with everything .zshrc loads. Neovim
+# comes with what its config needs to build parsers (tree-sitter-cli, gcc) and
+# to install tools through Mason (unzip, python).
 set -- "$@" ghostty tmux zsh zsh-autosuggestions zsh-syntax-highlighting \
-  starship fzf zoxide mise neovim
+  starship fzf zoxide mise neovim tree-sitter-cli gcc unzip python
 
 # =============================================================================
 # Install
