@@ -22,6 +22,9 @@ chezmoi apply
 `apply` installs the packages, writes the configs and clones TPM and, if
 `~/.config/nvim` is missing,
 [zttingbot/neovim-config](https://github.com/zttingbot/neovim-config).
+It also adds lines to `/etc/pam.d/login` and `/etc/pam.d/passwd`, with sudo,
+so the login password unlocks the GNOME keyring. Each file's original is kept
+as `<file>.pre-keyring`.
 
 ## After installing
 

@@ -4,8 +4,8 @@
 # Run by `chezmoi apply` before it writes anything, and again whenever this
 # file changes, since chezmoi reruns a run_onchange_ script when its contents
 # do. Each group appends to the argument list, so pacman runs once, last, with
-# every package. Groups follow the desktop from the bottom up: the X session,
-# then what runs on it, then the terminal. Full reference:
+# every package. Groups follow the desktop from the bottom up: the login, the
+# X session, then what runs on it, then the terminal. Full reference:
 # https://www.chezmoi.io/user-guide/use-scripts-to-perform-actions/
 #
 # Missing on purpose:
@@ -14,15 +14,25 @@
 #                            with it.
 #   MonoLisa Nerd Font Mono  a paid font, installed by hand into
 #                            ~/.local/share/fonts.
+#
+# Kept in sync with run_onchange_after_enable-keyring-pam.sh
+#   - gnome-keyring provides the PAM module that script turns on.
 
 # =============================================================================
 # Packages
 # =============================================================================
 
+# --- Login keyring -----------------------------------------------------------
+
+# Holds passwords for Secret Service clients such as proton-vpn-cli, unlocked
+# at console login; see "Kept in sync" above. The package enables a socket
+# that starts the daemon on first use, so no config starts it by hand.
+set -- gnome-keyring
+
 # --- X session ---------------------------------------------------------------
 
 # .xinitrc starts i3, which runs the bar, picom and feh.
-set -- xorg-server xorg-xinit i3-wm i3status-rust picom feh
+set -- "$@" xorg-server xorg-xinit i3-wm i3status-rust picom feh
 
 # --- Notifications and launcher ----------------------------------------------
 
