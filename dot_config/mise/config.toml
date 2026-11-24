@@ -26,6 +26,6 @@ idiomatic_version_file_enable_tools = ["node"]
 
 [tools]
 
-# The fallback outside any pinned project. "lts" resolves to the newest LTS
-# release when mise installs, so `mise up` moves to the next LTS line.
-node = "lts"
+# The fallback outside any pinned project. Held on the 24 line: `mise up` takes
+# its updates but won't move to a newer major.
+node = "24"
