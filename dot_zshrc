@@ -24,6 +24,9 @@
 export EDITOR="nvim"
 export VISUAL="$EDITOR"
 
+# For programs that open URLs themselves, such as gh and Python's webbrowser.
+export BROWSER="firefox"
+
 # =============================================================================
 # Paths
 # =============================================================================
