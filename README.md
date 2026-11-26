@@ -46,6 +46,20 @@ as `<file>.pre-keyring`.
    with its [tmux backend](https://github.com/smart-splits-nvim/backend-tmux)
    for tmux's `C-h/j/k/l` and `M-h/j/k/l` to reach Neovim.
 
+## Restore tmux sessions
+
+tmux-resurrect and workmux each restore their own sessions. Press `C-a C-r`
+first: tmux-resurrect fully restores a fresh tmux only while nothing else is
+open in it.
+
+- `C-a C-r` restores the ordinary sessions from the last save (`C-a C-s`
+  saves). New saves leave workmux's sessions out; saves made before may still
+  hold them.
+- `C-a C-w` runs `workmux resurrect` for the current pane's repo. It reopens
+  the worktrees whose agents were running, with workmux's configured windows
+  rather than ones you added. A worktree without a remembered agent needs
+  `workmux open <name>`.
+
 ## Customize
 
 - **Local settings:** put machine-specific changes in `~/.zshrc.local` or

@@ -15,6 +15,13 @@
 #     space and the handle, within status-left-length, which shows handles of
 #     up to 15 characters.
 #   - Clicking an agent in the sidebar relies on mouse on.
+#
+# Kept in sync with ~/.config/tmux/scripts/resurrect-skip-workmux.sh
+#   - worktree_dir stays unset: that script finds workmux's sessions by the
+#     default <project>__worktrees/ folder they start in.
+#   - mode: session gives each worktree a session of its own, which that
+#     script leaves out of tmux-resurrect's saves whole. A worktree opened as
+#     a window in another session stays in them.
 
 # =============================================================================
 # Worktrees
@@ -43,7 +50,7 @@ worktree_naming: basename
 # =============================================================================
 
 # A tmux session per worktree instead of a window in the current one, so a
-# worktree can hold several windows of its own.
+# worktree can hold several windows of its own; see "Kept in sync" above.
 mode: session
 
 # The editor, focused, then a shell and the agent, each in a window of its
