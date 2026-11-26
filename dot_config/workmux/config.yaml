@@ -1,0 +1,87 @@
+# workmux configuration.
+#
+# Global config, read by every workmux command. The nearest .workmux.yaml at
+# or above the directory workmux runs in overrides it key by key. YAML keys
+# can come in any order, so sections follow a worktree's life: the branch it
+# starts from and the name it gets, the session it opens in, watching its
+# agent, then merging it. workmux writes here too: pressing T in the dashboard
+# appends a theme line, keeping these comments, which then shows in
+# `chezmoi diff`.
+# Full reference: https://workmux.dev/guide/configuration, or
+# `workmux config reference` offline.
+#
+# Kept in sync with ~/.config/tmux/tmux.conf
+#   - worktree_naming: basename keeps session names, workmux's branch glyph, a
+#     space and the handle, within status-left-length, which shows handles of
+#     up to 15 characters.
+#   - Clicking an agent in the sidebar relies on mouse on.
+
+# =============================================================================
+# Worktrees
+# =============================================================================
+
+# Disabled: without it, a new branch starts from the branch checked out where
+# `workmux add` runs, so running it in a worktree's session stacks the new
+# branch on that one, for chains of small PRs. auto would start every branch
+# from main. workmux saves each branch's base, and `workmux rebase` uses it.
+# `workmux merge` doesn't: it targets main unless given --into.
+# base_branch: auto
+
+# Draws workmux's icons from the Nerd Font, Ghostty's MonoLisa Nerd Font Mono,
+# including the nf-pl-branch glyph that starts each session name in place of
+# the plain wm- prefix.
+nerdfont: true
+
+# Names a worktree after the part of its branch past the last slash, so
+# feat/auth-api opens as auth-api; see "Kept in sync" above. Branches that
+# differ only before the slash, such as feat/x and fix/x, then clash: the
+# second `workmux add` fails and needs --name.
+worktree_naming: basename
+
+# =============================================================================
+# Sessions
+# =============================================================================
+
+# A tmux session per worktree instead of a window in the current one, so a
+# worktree can hold several windows of its own.
+mode: session
+
+# The editor, focused, then a shell and the agent, each in a window of its
+# own. Without this, workmux starts the agent only in repos that have a
+# CLAUDE.md and opens two shells elsewhere.
+windows:
+  - name: source
+    panes:
+      - command: nvim
+        focus: true
+  - name: shell
+  - name: agent
+    panes:
+      - command: <agent>
+
+# =============================================================================
+# Monitoring
+# =============================================================================
+
+# Agents idle this long count as stale in the dashboard and sidebar: dimmed,
+# and folded away while the sidebar is grouped. The default of an hour folds
+# a stack's lower branches while their PRs wait for review, though those are
+# the ones that come back with fixes.
+stale_after: 4h
+
+# The sidebar lists agents from every session, so it shows the ones waiting
+# outside the session in view. `workmux sidebar` toggles it.
+sidebar:
+  # Waiting and done agents first, since those need you.
+  sort: priority
+  # One group per repo, so a stack's branches sit together.
+  group_by: project
+
+# =============================================================================
+# Merging
+# =============================================================================
+
+# `workmux merge` rebases the branch onto its target and fast-forwards, so
+# history stays linear, as main's is. Only a local merge reads this: a PR
+# merges on the forge, and `workmux rm --gone` cleans up after it.
+merge_strategy: rebase
